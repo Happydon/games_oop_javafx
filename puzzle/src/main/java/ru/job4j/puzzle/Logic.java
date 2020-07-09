@@ -2,6 +2,7 @@ package ru.job4j.puzzle;
 
 import ru.job4j.puzzle.firuges.Cell;
 import ru.job4j.puzzle.firuges.Figure;
+
 import java.util.Arrays;
 
 public class Logic {
@@ -9,50 +10,50 @@ public class Logic {
     private final Figure[] figures;
     private int index = 0;
 
-    public Logic(int sz) {
-        size = sz;
-        figures = new Figure[size * size];
+    public Logic(int size) {
+        this.size = size;
+        this.figures = new Figure[size * size];
     }
 
     public void add(Figure figure) {
-        figures[index++] = figure;
+        this.figures[this.index++] = figure;
     }
 
     public boolean move(Cell source, Cell dest) {
         boolean rst = false;
-        int index = findBy(source);
+        int index = this.findBy(source);
         if (index != -1) {
-            Cell[] steps = figures[index].way(source, dest);
-            if (isFree(steps)) {
+            Cell[] steps = this.figures[index].way(source, dest);
+            if (this.isFree(steps)) {
                 rst = true;
-                figures[index] = figures[index].copy(dest);
+                this.figures[index] = this.figures[index].copy(dest);
             }
         }
         return rst;
     }
 
-    public boolean isFree(Cell... cells) {
+    public boolean isFree(Cell ... cells) {
         boolean result = cells.length > 0;
         for (Cell cell : cells) {
-            if (findBy(cell) != -1) {
-               result = false;
-               break;
+            if (this.findBy(cell) != -1) {
+                result = false;
+                break;
             }
         }
         return result;
     }
 
     public void clean() {
-        for (int position = 0; position != figures.length; position++) {
-            figures[position] = null;
+        for (int position = 0; position != this.figures.length; position++) {
+            this.figures[position] = null;
         }
-        index = 0;
+        this.index = 0;
     }
 
     private int findBy(Cell cell) {
         int rst = -1;
-        for (int index = 0; index != figures.length; index++) {
-            if (figures[index] != null && figures[index].position().equals(cell)) {
+        for (int index = 0; index != this.figures.length; index++) {
+            if (this.figures[index] != null && this.figures[index].position().equals(cell)) {
                 rst = index;
                 break;
             }
@@ -61,15 +62,42 @@ public class Logic {
     }
 
     public boolean isWin() {
-        return Win.check(convert());
+        int[][] table = this.convert();
+        boolean result = false;
+        for (int index = 0; index < table.length; index++) {
+            if ((monoHorizontal(table, index) || monoVertical(table, index))) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
-
+    public boolean monoHorizontal(int[][] table, int row) {
+        boolean result = true;
+        for (int j = 0; j < table[0].length; j++) {
+            if (table[row][j] != 1) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+    public boolean monoVertical(int[][] table, int column) {
+        boolean result = true;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][column] != 1) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
     public int[][] convert() {
-        int[][] table = new int[size][size];
+        int[][] table = new int[this.size][this.size];
         for (int row = 0; row != table.length; row++) {
             for (int cell = 0; cell != table.length; cell++) {
-                int position = findBy(new Cell(row, cell));
-                if (position != -1 && figures[position].movable()) {
+                int position = this.findBy(new Cell(row, cell));
+                if (position != -1 && this.figures[position].movable()) {
                     table[row][cell] = 1;
                 }
             }
@@ -79,6 +107,6 @@ public class Logic {
 
     @Override
     public String toString() {
-        return Arrays.toString(convert());
+        return Arrays.toString(this.convert());
     }
 }
