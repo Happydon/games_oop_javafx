@@ -25,13 +25,22 @@ public class Logic {
         int index = findBy(source);
         Cell[] steps = figures[index].way(source, dest);
         if (!isFree(steps)) {
-            throw new OccupiedCellException();
+            throw new OccupiedCellException("At least one of the cells is occupied");
         }
         figures[index] = figures[index].copy(dest);
     }
 
     private boolean isFree(Cell[] steps) {
-        return true;
+        boolean rsl = true;
+        for (int i = 0;i < steps.length; i++) {
+            for (int index = 0;index < figures.length; index++){
+                if (figures[index].position() == steps[i]) {
+                    rsl = false;
+                    break;
+                }
+            }
+        }
+        return rsl;
     }
 
     public void clean() {
@@ -39,7 +48,7 @@ public class Logic {
         index = 0;
     }
 
-    private int findBy(Cell cell) throws FigureNotFoundException {
+    public int findBy(Cell cell) throws FigureNotFoundException {
         for (int index = 0; index != figures.length; index++) {
             if (figures[index] != null && figures[index].position().equals(cell)) {
                 return index;

@@ -1,15 +1,13 @@
 package ru.job4j.chess.firuges;
 
-import ru.job4j.chess.ImpossibleMoveException;
-
 public interface Figure {
     Cell position();
 
-    Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
+    Cell[] way(Cell source, Cell dest);
 
     default String icon() {
         return String.format(
-                "%s.png", getClass().getSimpleName()
+                "%s.png", this.getClass().getSimpleName()
         );
     }
 
