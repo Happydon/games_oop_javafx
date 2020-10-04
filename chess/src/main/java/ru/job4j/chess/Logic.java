@@ -34,7 +34,7 @@ public class Logic {
         boolean rsl = true;
         for (int i = 0;i < steps.length; i++) {
             for (int index = 0;index < figures.length; index++){
-                if (figures[index].position() == steps[i]) {
+                if (figures[index].position().equals(steps[i])) {
                     rsl = false;
                     break;
                 }
